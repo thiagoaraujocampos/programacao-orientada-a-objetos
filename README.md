@@ -3,27 +3,27 @@
 ### Conteúdo
  > _Com base no cronograma_
   
- * Introdução ao paradigma orientado a objetos
- * Trabalhando com objetos e classes em C++, Herança e Composição
- * Métodos estáticos & métodos comuns
- * Visibilidade de métodos e atributos: private, public, protected (C++)
- * Overriding (Sobreposição) & Overloading (Sobrecarga)
- * Relacionamento entre classes:
-   - Composição
-   - Agregação
-   - Asociação
- * Namespace C++
- * Alocação Dinâmica
- * Polimorfismo, Sobrecarga de métodos e operadores
- * Sobrecarga de operadores (métodos friend)
+ 1. Introdução ao paradigma orientado a objetos
+ 2. Trabalhando com objetos e classes em C++, Herança e Composição
+ 3. Métodos estáticos & métodos comuns
+ 4. Visibilidade de métodos e atributos: private, public, protected (C++)
+ 5. Overriding (Sobreposição) & Overloading (Sobrecarga)
+ 6. Relacionamento entre classes:
+    * Composição
+    * Agregação
+    * Asociação
+ 7. Namespace C++
+ 8. Alocação Dinâmica
+ 9. Polimorfismo, Sobrecarga de métodos e operadores
+ 10. Sobrecarga de operadores (métodos friend)
   
  > **P1**
 
- * Herança Múltipla (diamond problem)
- * Classes Abstratas (Interfaces)
- * Templates: polimorfismo paramétrico
- * Tratamento de Exceções
- * Entrada e Saída (Classes orientadas a objetos)
+ 11. [Herança Múltipla (diamond problem)](#herança-múltipla)
+ 12. [Classes Abstratas (Interfaces)](#classes-abstratas)
+ 13. [Templates: polimorfismo paramétrico](#polimorfismo-paramétrico)
+ 14. [Arquivos](#arquivos)
+ 15. [Tratamento de Exceções](#tratamento-de-exceções)
  
  > **P2**
  ---
@@ -42,7 +42,6 @@
  ```c++
  #ifndef LIGER_H
 #define LIGER_H
-
 #include "Lion.h"
 #include "Tiger.h"
 
@@ -116,7 +115,7 @@ private:
  Essa implementação obriga que as classes Enfermeiro e Médico (herdeiros de pessoa) possuam implementado o método getProfissao().
  
  ---
- ### Templates: polimorfismo paramétrico
+ ### Polimorfismo paramétrico
   
  Antes, podemos relembrar uma pequena definição: O Polimorfismo é o princípio pela qual duas ou mais classes derivadas de uma mesma 'superclasse' podem invocar métodos que tem a mesma identificação (assinatura) mas comportamentos distintos, especializado para cada classe derivada, usando para tanto uma referência a um objeto do tipo da 'superclasse'.
  
@@ -255,14 +254,258 @@ private:
  
 ```c++
  Fracao f1(1,2);
-    Fracao f2(1,3);
-    Calculadora<Fracao> cFracao(f1, f2);
-    cFracao.imprime();
+ Fracao f2(1,3);
+ Calculadora<Fracao> cFracao(f1, f2);
+ cFracao.imprime();
 ```
+
+ ---
+ ### Arquivos
+ 
+ A utilização de arquivos é baseada no armazenamento de dados fora da memória principal para que seja possível, por exemplo, um armazenamento permanente de informações. Essa ferramenta é muito importante para que seja possível que o sistema possa manter atualizado constantemente os dados no software mesmo após desligamento da maquina entre outras causas.
+ 
+ Para que seja dominado o entendimento de arquivos, antes, é necessário entender um pouco sobre **Entradas e Saídas**.
+ 
+  * **Stream**: palavra usada para indicar _fluxo de bytes_. Dessa forma, objetos que tem a capacidade de receber ou transferir bytes de ou para a memória é chamado de **objeto stream**.
+    * cin e cout são exemplos de objetos stream.
+  
+ Em C++ são fornecidas três classes para lidar com arquivos:
+   * **ofstream** para escrever em arquivos;
+   * **ifstream** para ler de arquivos;
+   * **fstream** para ler e/ou escrever em arquivos.
+   
+Para usá-las precisamos incluir a biblioteca <fstream>.
+ 
+  * Arquivo de Saída:
+    ```c++
+     ofstream arqSaida;
+     arqSaida.open("nomeArquivo.txt")
+     arqSaida << "Gravando no arquivo";
+     arqSaida.close();
+    ```
+  
+  * Arquivo de Entrada:
+    ```c++
+     ifstream arqSaida;
+     arqEntrada.open("nomeArquivo.txt")
+     arqEntrada >> x;
+     arqEntrada.close();
+    ```
+  _Obs: O operador de extração de fluxo (>>) pula os caracteres em branco como espaços, tabulações e nova linha no fluxo de entrada._
+  
+  Os exemplos de arquivos estão presentes em _17 - Arquivos_ onde é possível verificar ArquivoTexto, ArquivoTxt2, ContaCaracteres, CopiaTransformada, RetanguloBinario e ArquivoBinario. Todos utilizando a teoria de arquivos em sua conjuntura.
+  
+  **ArquivoTxt2**
+  
+  Esse projeto contém uma codificação simples do funcionamento de arquivos. O objetivo é abrir um arquivo para Saída e um para Entrada onde será lido o arquivo de entrada e seu conteúdo copiada para o arquivo de Saída.
+  
+  ```c++
+  #include <iostream>
+#include <fstream>
+
+using namespace std;
+
+int main(int argc, char** argv) {
+    
+    ifstream arq_entrada;
+    ofstream arq_saida;
+    string palavra;
+    
+    arq_entrada.open("dados.txt");
+    arq_saida.open("saida.txt");
+    
+    if (arq_entrada.is_open()) {
+        while(getline(arq_entrada, palavra)) {
+            arq_saida << palavra << endl;
+        }
+    } else {
+        cout << "O arquivo não pode ser aberto.";
+    }
+    
+    arq_entrada.close();
+    arq_saida.close();
+    
+    return 0;
+}
+  ```
+ 
+ Além disso, existe uma verificação para confirmar que o arquivo foi aberto com sucesso (asegurando um erro futuro).
+ 
+ **Métodos de abertura de arquivos**
+ 
+|Modos|Descrição|
+|---|---|
+|ios::in|abre para leitura|
+|ios::out|abre para gravação|
+|ios::app|grava a partir do fim do arquivo|
+|ios::trunc|abre e apaga todo o conteúdo do arquivo|
+|ios::ate|abre e posiciona no final do arquivo|
+ 
+  * Arquivo de Entrada:
+    ```c++
+     fstream arq;
+     arq.open("nomeArquivo.txt", ios::in) //Abrir somente leitura
+     arq.open("nomeArquivo.txt", ios::out) //Abrir somente leitura
+     arq.open("nomeArquivo.txt", ios::in|ios::out) //Abrir leitura e escrita
+    ```
+ 
+ Algumas observações:
+ 
+ **ofstream:** 
+   * Abre somente para escrita (não permite leitura);
+   * Se não existe, o arquivo é criado;
+   * Se o arquivo já existe, o seu conteúdo anterior é apagado.
+   
+ **ifstream:** 
+   * Abre somente para leitura (Não é permitido escrita);
+   * A abertura falha caso o arquivo não exista.
+ 
+ Para verificar o **fim de arquivos** usamos **eof()**. É retornado true se o marcador estiver no fim do arquivo e false caso contrário.
+ 
+   ```c++
+     ifstream inArq;
+     ofstream outArq;
+     inArq.eof();
+     outArq.eof();
+   ```
+ Para verificar se um arquivo foi aberto com sucesso pode-se usar a função **is_open()** que retorna true se o arquivo encontra-se aberto ou false caso contrário.
+ 
+   ```c++
+     inArq.is_open();
+     outArq.is_open();
+   ```
+   
+  Trabalhando com um único caracter por vez:
+    * inArq.get(caracter): Pega o próximo caracter da stream inArq;
+    * outArq.put(caracter): Insere o caracter na stream saída.
+  
+   
+**Arquivos em modo binário**
+
+Para gravar ou ler um bloco de dados pode-se usar **write()** e **read()**
+ 
+  * Exemplo retangulo:
+    Classe:
+    ```c++
+    #ifndef RETANGULO_H
+    #define RETANGULO_H
+
+    class Retangulo {
+    private:
+      double ladoa;
+      double ladob;
+    public:
+      void setDim(double a, double b) {
+        ladoa = a;
+        ladob = b;
+      }
+      void imprimir() {
+        cout << "Retangulo com lados : " << ladoa << " e " << ladob << end << "Area : " << area() << endl << endl;
+      }
+      double area() {
+        return ladoa * ladob;
+      }
+      static bool compara(Retangulo r1, Retangulo r2) {
+        return r1.area() < r2.area();
+      }
+    };
+
+    #endif /* RETANGULO_H */
+    ```
+    
+    Main:
+    ```c++
+    #include "Retangulo.h"
+    #include <iostream>
+    #include <fstream>
+    #include <vector>
+    #include <algorithm>
+
+    using namespace std;
+
+    void grava(string fileName) {
+      Retangulo r;
+      double x, y;
+      
+      ofstream saida(fileName.c_str(), ios::binary);
+
+      for (int i = 0; i < 3; i++) {
+        cout << "\n Digite base e altura: ";
+        cin >> x>>y;
+        r.setDim(x, y);
+        saida.write(reinterpret_cast<char*> (&r), sizeof (Retangulo));
+      }
+
+      saida.close();
+    }
+
+    void imprime(string fileName) {
+       Retangulo r;
+       ifstream entrada(fileName.c_str(), ios::binary);
+
+       entrada.read(reinterpret_cast<char*> (&r), sizeof (Retangulo));
+    
+       while (entrada.good()) {
+         r.imprimir();
+         entrada.read(reinterpret_cast<char*> (&r), sizeof (Retangulo));
+       }
+     }
+
+    void imprime(string fileName, int pos) {
+      Retangulo r;
+      
+      ifstream entrada(fileName.c_str(), ios::binary);
+
+      entrada.seekg((pos - 1) * sizeof (Retangulo));
+      entrada.read(reinterpret_cast<char*> (&r), sizeof (Retangulo));
+
+      if (entrada.good()) {
+        r.imprimir();
+      } else {
+        cout << "Retangulo não encontrado" << endl;
+      }
+    }
+
+    void ordenaArquivo(string fileName) {
+      Retangulo r;
+
+      vector<Retangulo> retangulos;
+      ifstream entrada(fileName.c_str(), ios::binary);
+      entrada.read(reinterpret_cast<char*> (&r), sizeof (Retangulo));
+    
+      while (entrada.good()) {
+        retangulos.push_back(r);
+        entrada.read(reinterpret_cast<char*> (&r), sizeof (Retangulo));
+      }
+
+      entrada.close();
+
+      sort(retangulos.begin(), retangulos.end(), Retangulo::compara);
+
+      ofstream ordenado(fileName.c_str(), ios::binary);
+      for (int i = 0; i < retangulos.size(); i++) {
+        ordenado.write(reinterpret_cast<char*> (&retangulos[i]), sizeof (Retangulo));
+      }
+
+      ordenado.close();
+    }
+
+    int main() {
+      string fileName = "info.dat";
+      grava(fileName);
+      imprime(fileName);
+      int pos;
+      cout << "Posicao: ";
+      cin >> pos;
+      imprime(fileName, pos);
+      ordenaArquivo(fileName);
+      imprime(fileName);
+      return 0;
+    }
+    ```
+    
+   Esse exemplo apesar de grande representa muito do uso de arquivos, arquivo binário e suas interações com estruturas. O programa, basicamente, possuí a classe retangulo a qual guarda dois lados do retangulo e tem alguns métodos (setDim, imprimir, area e compara). Essa classe é usada para instanciar objetos e guarda-los no arquivo binário usando **write()** e também para ler usando **read()**. Além disso, usa-se as bibliotecas <vector> e <algorithm> para criar o vetor de objetos retangulo e ordena-lo.
  
  ---
  ### Tratamento de Exceções
- 
- ---
- ### Entrada e Saída
  
