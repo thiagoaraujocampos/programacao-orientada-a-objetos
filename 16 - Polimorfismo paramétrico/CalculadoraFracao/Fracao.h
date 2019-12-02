@@ -6,7 +6,7 @@ using namespace std;
 
 class Fracao {
 public:
-    Fracao (int a, int b) : a(a), b(b) {
+    Fracao (int a, int b) :     a(a), b(b) {
     }
     
     Fracao operator+ (const Fracao& right) const {
