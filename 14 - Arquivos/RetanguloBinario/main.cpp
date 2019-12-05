@@ -15,7 +15,7 @@ void grava(string fileName) {
 
     for (int i = 0; i < 3; i++) {
         cout << "\n Digite base e altura: ";
-        cin >> x>>y;
+        cin >> x >> y;
         r.setDim(x, y);
         saida.write(reinterpret_cast<char*> (&r), sizeof (Retangulo));
     }
