@@ -3,19 +3,19 @@
 ### Conteúdo
  > _Com base no cronograma_
   
- 1. Introdução ao paradigma orientado a objetos
- 2. Trabalhando com objetos e classes em C++, Herança e Composição
- 3. Métodos estáticos & métodos comuns
- 4. Visibilidade de métodos e atributos: private, public, protected (C++)
- 5. Overriding (Sobreposição) & Overloading (Sobrecarga)
- 6. Relacionamento entre classes:
+ 1. [Introdução ao paradigma orientado a objetos](#introducao-ao-paradigma-orientado-a-objetos)
+ 2. [Trabalhando com objetos e classes em C++, Herança e Composição](#trabalhando-com-objetos-e-classes)
+ 3. [Métodos estáticos & métodos comuns](#métodos-estáticos-e-comuns)
+ 4. [Visibilidade de métodos e atributos: private, public, protected (C++)](#visibilidade-de-métodos-e-atributos)
+ 5. [Overriding (Sobreposição) & Overloading (Sobrecarga)](#overriding-e-overloading)
+ 6. [Relacionamento entre classes:](#relacionamento-entre-classes)
     * Composição
     * Agregação
     * Asociação
- 7. Namespace C++
- 8. Alocação Dinâmica
- 9. Polimorfismo, Sobrecarga de métodos e operadores
- 10. Sobrecarga de operadores (métodos friend)
+ 7. [Namespace C++](#namespace)
+ 8. [Alocação Dinâmica](#alocação-dinâmica)
+ 9. [Polimorfismo, Sobrecarga de métodos e operadores](#polimorfismo,-sobrecarga-de-métodos-e-operadores)
+ 10. [Sobrecarga de operadores (métodos friend)](#sobrecarga-de-operadores-(métodos-friend))
   
  > **P1**
 
@@ -27,6 +27,179 @@
  
  > **P2**
  ---
+ ### Introdução ao paradigma orientado a objetos
+ 
+ Para uma linguagem ser considerada orientada a objetos ele precisa implementar quatro conceitos básicos:
+ 
+   1. Abstração: habilidade de modelar características do mundo real.
+   2. Encapsulamento: habilidade da unidade de proteger os dados e permitir que apenas suas operações internas tenham acesso a elas
+   3. Herança: mecanismo que permite
+      a) a criação de novos objetos por meio da modificação de algo já existente;
+      b) o vínculo do objeto criado com o objeto antigo.
+   4. Polimorfismo: capacidade de uma unidade ter várias formas.
+   
+ O paradigma de orientação a objetos, basicamente, é um príncipio que se baseia em criar novos "objetos" através de "objetos" já existentes, ou então, utiliza-se de "moldes" para que seja possível a construção de outras ferramentes facilmente.
+ 
+ **Abstrair** é encontrar algo geral que pode ser aplicado á outros casos menores.
+ **Encapsular** é "esconder" detalhes para os manter "protegidos", análogo a uma capsula de remédio.
+ **Herança** são características que podem ser herdadas de um para outro, assim como no conceito biológico.
+ **Polimorfismo** é a transformação que pode ocorrer de um algo geral para outros, por isso um "Polimorfo".
+ 
+ A Pasta _01 - Introdução ao paradigma orientado a objetos_ tem um pequeno exemplo de projeto orientado a objetos: **Pontos25-C++**.
+ 
+ Esse projeto possuí três arquivos principais que o compõe: main.cpp, Ponto2D.cpp e Ponto2D.h. Estes fazem um conjunto que podem facilmente fazer com que o conceito de orientação a objeto básico possa ser visto.
+ 
+ - **Ponto2D.h** _Header_ do projeto.
+```c++
+#ifndef PONTO2D_H
+#define PONTO2D_H
+
+class Ponto2D {
+public:
+    Ponto2D(float x, float y); // Construtor
+    virtual ~Ponto2D(); // Destrutor
+    
+    float distancia(Ponto2D p); // Método da classe
+private:
+    float x, y; // Atributos da classe
+};
+
+#endif /* PONTO2D_H */
+ ```
+ 
+ Aqui está a primeira classe que veremos. **Ponto2D.h** é um arquivo de cabeçalho, aqui estão a assinatura dos métodos (funções da classe) e seus atributos. O importante de entender aqui é que esse é o "geral" correspondente a um ponto, temos duas coordenadas x e y, criar um ponto com o construtor (passando as coordenadas como parâmetro) e calcular a distância de um determinado ponto a outro (que foi passado por parâmetro).
+ 
+ - **Ponto2D.cpp**
+```c++
+#include <math.h>
+#include "Ponto2D.h"
+
+Ponto2D::Ponto2D(float a, float b) {
+    x = a;
+    y = b;
+}
+
+Ponto2D::~Ponto2D() {
+
+}
+
+float Ponto2D::distancia(Ponto2D p) {
+    float dx = x - p.x;
+    float dy = y - p.y;
+    return sqrt(dx * dx + dy * dy);
+}
+ ```
+ 
+ Aqui estão implementadas os métodos declarados em _Pontos2D.h_. Em **Pontos25.cpp** pode-se perceber como os atributos são definidos quando usamos o construtor e como pode ser implementado a lógica de um método (como em _ float distancia(Pontos25 p)_).
+ 
+ - **main.cpp**
+```c++
+#include <cstdio>
+#include "Ponto2D.h"
+
+int main(int argc, char** argv) {
+
+    Ponto2D p1(4, 4);
+    Ponto2D p2(7, 8);    
+
+    printf("dist(P1, P2) = %5.2f\n", p1.distancia(p2));
+    printf("dist(P2, P1) = %5.2f\n", p2.distancia(p1));
+
+    return 0;
+}
+ ```
+ 
+ o arquivo **main.cpp** possúi o include da classe _#include "Ponto2D.h"_ e a instanciação de objetos do tipo ponto (usando seu construtor e passando as coordenadas por parâmetro)
+ 
+ ### Trabalhando com objetos e classes
+ 
+ Como visto na introdução, uma classe pode ser considerada como o par de arquivos .h e .cpp que conterão, repectivamente, a assinatura da classe e a implementação dos métodos. Mas devemos nos aprofundar um pouco em como usar uma classe.
+ 
+ Um objeto é a instanciação de uma classe, ou então, a classe é um geral que pode ser aplicada a determinado objeto, como por exemplo, se tivessemos uma classe pessoa na vida real poderiamos dizer que todos as pessoas do planeta são objetos dessa classe, ou então, todas elas possuí características em comum que estão encapsuladas nessa classe (altura etc). Lógico que o mundo é bem mais complexo do que somente uma classe pessoas mas esse exemplo ajuda a entender o que é uma classe e seus objetos.
+ 
+ É interessante dizer aqui que você poderá ver, recorrentemente, diagramas de classe toda vez que vai estudar um projeto orientado a objeto. um diagrama de classe representa classes (com seus elementos incluídos) e suas interações com outras classes de forma visual e facilitada.
+ 
+ Nesse tópico introduzi um projeto um pouco mais elaborado na pasta _02 - Trabalhando com objetos e classes_: **ContaCorrente-C++**. Esse projeto consiste na criação da classe ContaCorrente que possuí elementos semelhantes a uma conta real e métodos capazes de manipular os atributos (depósito, retirada, transferência e imprime).
+ 
+ ```c++
+ #ifndef CONTACORRENTE_H
+#define CONTACORRENTE_H
+
+class ContaCorrente {
+public:
+    ContaCorrente(int numero, double saldo = 0); // construtor 
+    virtual ~ContaCorrente(); // destrutor
+    // métodos da classe
+    bool retirada(double valor);
+    void deposito(double valor);
+    bool transferencia(ContaCorrente &outra, double valor);
+    void imprime();
+private: // atributos da classe
+    int numero;
+    double saldo;
+};
+
+#endif /* CONTACORRENTE_H */
+ ```
+
+ A implementação em _ContaCorrente.cpp_ pode ser conferida na pasta assim como a _main.cpp_ que contêm um simples uso da classe e utilizando seus métodos entre dois objeto diferentes instanciados.
+
+ ### Métodos estáticos e comuns
+ 
+ Antes de dizer diretamente o que é um método estático e comum (como já pode ser induzidos pelos tópicos acima), vamos ver um exempl de projeto com herança.
+ 
+ Em _03 - Métodos estáticos e comuns_ foi disponibilizado _Herança_. Este projeto possuí o seguinte diagrama:
+ 
+ ![Diagrama Pessoa](https://i.imgur.com/pmY6du9.png)
+ 
+ Percebe-se que a classe pessoa é "pai" da classe professor e professor é "pai" de coordenador. Com isso é fácil perceber que coordenador herda os elementos de professor que herda de pessoa.
+ 
+ Em outras palavra, um coordenador é um professor que é uma pessoa, um professor é uma pessoa, e uma pessoa somente é uma pessoa. No fim da história todos são pessoas, porém alguns possuem ramificações especiais de pessoas.
+ 
+ Outro fato curioso desenvolvido nesse projeto é o elemento _static int contador_ na classe pessoa que é nossa primeiro contato com um atributo estático. Esse atributo é feito com intuito de contar quantas pessoas existem no total (implementado: contador++ no construtor e contador-- no destrutor).
+ 
+ **Atributo estático**
+ 
+ Um **atributo estático** é um atributo que é compartilhado por toda a classe (ele não pertece exclusivamente a cada objeto e sim a classe como um todo).
+ 
+ ```c++
+ static <tipo> <nomeAtributo>;
+ ```
+ 
+ Também podemos usar constantes em conjunto com _static_
+ 
+ ```c++
+ static const <tipo> <nomeAtributo> = <valor>;
+ ```
+ 
+ Para acessar atributos estáticos não é nessário instancia objeto:
+ 
+ ```c++
+ <NomeDaClasse>::<atributoDaClasse>;
+ ```
+ 
+ **Método estático**
+ 
+ Um **método estático** é, de modo semelhante ao atributo estático, compartilhado por toda classe.
+ 
+ ```c++
+ static <tipoRetorno> <nomeMetodo> (params);
+ ```
+ 
+ Para acessar (não é necessário instanciar objetos):
+ 
+ ```c++
+ C++: <NomeDaClasse>::<métodoDaClasse>;
+ ```
+ 
+ ### Visibilidade de métodos e atributos
+ ### Overriding e Overloading
+ ### Relacionamento entre classes
+ ### Namespace
+ ### Alocação dinâmica
+ ### Polimorfismo, Sobrecarga de métodos e operadores
+ ### Sobrecarga de operadores (métodos friend)
+ 
  
  ### Herança Múltipla
  > Diamond problem
