@@ -9,9 +9,10 @@
  4. [Visibilidade de métodos e atributos: private, public, protected (C++)](#visibilidade-de-métodos-e-atributos)
  5. [Overriding (Sobreposição) & Overloading (Sobrecarga)](#overriding-e-overloading)
  6. [Relacionamento entre classes:](#relacionamento-entre-classes)
-    * Composição
+    * Asocioação
     * Agregação
-    * Asociação
+    * Herança
+    * Composição
  7. [Namespace C++](#namespace)
  8. [Alocação Dinâmica](#alocação-dinâmica)
  9. [Polimorfismo, Sobrecarga de métodos e operadores](#polimorfismo,-sobrecarga-de-métodos-e-operadores)
@@ -193,13 +194,297 @@ private: // atributos da classe
  ```
  
  ### Visibilidade de métodos e atributos
+ 
+ Visibilidade é uma parte de POO principalmente teórica e é extremamente importante para o encapsulamento. Atributos e métodos declarado com qualquer um dos modificadores - private, publice e protected - são os assuntos desse tópico.
+ 
+ **Private x Public**
+ 
+ Atributos e métodos com o modificador **Private** só podem ser acessados, modificados ou executados por métodos da mesma classe.
+ 
+ > Atributos ou métodos que devam ser ocultos totalmente de usuários da classe devem ser declarados com o modificador private.
+ 
+ O modificador **Public** garante que o atributo ou método da classe declarado com este modificador poderá ser acessado ou executado a partir de qualquer outra classe.
+ 
+ **Protected**
+ 
+ Atributos e métodos com o modificador **Protected** podem ser acessados ou executados a partir de qualquer subclasse e, para outras classes (não subclasses), tem o mesmo comportamente do modificador private.
+ 
+ * **Public**: Pode ser acessado por qualquer classe. 
+ * **Private**: Pode ser acessado somente pela mesma classe.
+ * **Protected**: Pode ser acessado por subclasses.
+ 
  ### Overriding e Overloading
+ 
+ * **Overloadling (Sobrecarga)**: Se trata sobrecarga de um método, ou então, quando um método é declarado e sua assinatura não é única.
+ 
+ Isso acontece quando temos mais de uma assinatura (nome e um conjunto de parâmetros). Se declararmos, então, dois métodos com mesmo nome e parâmetros diferentes, dizemos que estamos sobrecarregando o referido método.
+ 
+ Em _over_ dentro de _05 - Overriding e Overloading_ é possível verificar, de forma rápida com as classes implementadas na própria main.c, exemplos de overloading como em:
+ 
+ ```c++
+ class B : public A {
+ public:
+    void m1() {  //overiding
+        cout << "m1() da Classe B" << endl;
+    }
+    void m1(int a) { //overloading
+        cout << "m1(int) da Classe B" << endl;
+    }
+ };
+ ```
+ 
+ É visível o Overloading no exemplo, nessa classe temos dois métodos (ou mais) com o mesmo nome e com o parâmetro e a implementação diferente característico do príncipio de sobrecarga. Esse conceito remete diretamente ao polimorfismo.
+ 
+ > eles necessariamente devem possuir argumentos diferentes para funcionar. RICARTE (2001) afirma que a escolha de qual método irá ser chamado pelo programa principal dependerá de acordo com o seu tipo de objeto, que será tomada apenas no tempo de execução por meio de ligação tardia.
+ 
+ * **Overriding (Sobreposição)**: De forma muito semelhante a Overloading aqui também será reescrito um determinado método, porém o Override é feito nas subclasses de uma classe com um método específico. A grande diferença de overriding para overloading é que aqui os métodos devem possuir mesma assinatura (nome, retorno e parâmetros).
+ 
+ Em _over_ também é possível verificar exemplos de overriding:
+ 
+ ```c++
+ class A {
+ public:
+    virtual void m1() {
+        cout << "m1() da Classe A" << endl;
+    }
+ };
+
+ class B : public A {
+ public:
+    void m1() {  //overiding
+        cout << "m1() da Classe B" << endl;
+    }
+    void m1(int a) { //overloading
+        cout << "m1(int) da Classe B" << endl;
+    }
+ };
+ ```
+ 
+ A classe A possuí **void m1()** que é sobreposto na classe B alterando somente sua implementação. 
+ 
+ * Nota: é importante o uso do **virtual** para que o override possa acontecer corretamente.
+ 
+ O projeto _Triangulo_ também é um exemplo de Overloading e Overriding um pouco mais elaborado demonstrando seu funcionamento em classes separadas como discutido nos tópicos acima.
+ 
  ### Relacionamento entre classes
+ 
+ * **Associação**: Descreve um vínculo que ocorre entre classes
+ 
+ ![associacao](https://i.imgur.com/zj1JWNM.png)
+ 
+   * Um aluno tem 0 ou 1 endereço e um endereço pode pertencer a n alunos.
+   
+ ```c++
+ class Aluno
+{
+public:
+    Aluno(string nome, int RA);
+    Aluno(string nome, int RA, Endereco* endereco); // Overloading
+    virtual ~Aluno();
+    // Getters e Setters
+    void imprime();
+private:
+    string nome;
+    int RA;
+    Endereco* endereco; // Associação
+};
+ ```
+ 
+ ```c++
+ class Endereco 
+ {
+ public:
+    Endereco(string logradouro, int numero, string cidade, string estado);
+    virtual ~Endereco();
+    // Getters e Setters
+    void imprime();
+ private:
+    string logradouro;
+    int numero;
+    string cidade;
+    string estado;
+ };
+ ```
+ 
+ * **Agregação**: Tipo especial de associação onde tenta-se demonstrar que as informações de um objeto precisam ser complementados pelas informações contidas em um ou mais objetos de outra classe.
+ 
+ ![exemplo_agregacao](http://www.cpscetec.com.br/adistancia/poo_php/imagens/agregacao2.jpg)
+ 
+ ```c++
+ 
+ 
+ ```
+ 
+ * **Herança**: Permite derivar novas classes de classes já existentes (cria subclasses)
+   * Subclasses herdam representações dos atributos e operações públicas da classe base
+ 
+ ![herenca_exemplo](https://i.imgur.com/bSP9TaP.png)
+ 
+ Classe base:
+ 
+ ```c++
+ class Pessoa 
+ {
+ public:
+   Pessoa(string nome, int idade);
+   virtual ~Pessoa();
+   // Getters e Setters
+   virtual void imprime();
+ private:
+   string nome;
+   int idade;
+ };
+ ```
+ 
+ Sub-classe:
+ 
+ ```c++
+ class Aluno : public Pessoa 
+ {
+ public:
+   Alino(string nome, int idade, int RA);
+   virtual ~Aluno();
+   // Getters e Setters
+   void imprime();
+ private:
+   int RA;
+ };
+ ```
+ 
+ Sub-classe:
+ 
+ ```c++
+ class Professor : public Pessoa 
+ {
+ public:
+   Professor(string nome, int idade, string departamento);
+   virtual ~Professor();
+   // Getters e Setters
+   void imprime();
+ private:
+   string departamento;
+ };
+ ```
+ 
+ * **Composição**: Pode-se dizer que composição é uma variação da agregação. Uma composição tenta representar também uma relação todo - parte. No entanto, na composição o objeto-pai (todo) é responsável por criar e destruir suas partes. Em uma composição um mesmo objeto-parte não pode se associar a mais de um objeto-pai.
+ 
+ ![exemplo_compos](https://i.imgur.com/7jxct3g.png)
+ 
+  ```c++
+  class Departamento {
+public:
+     Departamento(string nome, string sigla);
+     virtual ~Departamento();
+     //Gettes e Setters
+     void imprime();
+   private: 
+     string nome;
+     string sigla;
+  };
+  ```
+  
+  ```c++
+  class Universidade {
+  public:
+     Universidade(string nome);
+     virtual ~Universidade(); // Deve deletar os departamentos
+     void adicionaDepartamento(string nome, string sigla);
+     void removeDepartamento(string sigla);
+     void imprime();
+  private:
+     int qtde;
+     string nome;
+     Departamento** departamentos;
+  };
+  ```
+  -> Verifique a implementação em _06 - Relacionamento entre Classes/Codigo08a_ 
+ 
  ### Namespace
+ 
+ Namespaces é um tipo de "contêiner" nomeado capaz de organizar o programa em blocos e permitindo o uso de determinados elementos desse "contêneiner" quando é descrito o namespace correspondente a ele.
+ 
+ Em _07 - Namespace/Namespace_ é possível encontrar um projeto onde são criadas duas classes Pessoas diferentes com mesmo nome.
+ 
+ Em Pessoa1.h
+ ```c++
+ namespace ns1 {
+    class Pessoa {
+    public:
+        Pessoa(string nome, int idade);
+        void imprime();
+    private:
+        string nome;
+        int idade;
+    };
+}
+ ```
+ 
+ Em Pessoa2.h
+ ```c++
+ namespace ns2 {
+    class Pessoa {
+    public:
+        Pessoa(string nome, string endereco);
+        void imprime();
+    private:
+        string nome;
+        string endereco;
+    };
+ }
+ ```
+ 
+ Essas classes seriam conflituosas no projeto, porém, com uso do namespace podemos criar-las com o mesmo nome sem problemas. Dessa forma, para que sejam usadas é preciso determinar o namespace a ser usado.
+ 
  ### Alocação dinâmica
+ 
  ### Polimorfismo, Sobrecarga de métodos e operadores
+ 
+ Usado para sobrecarregar um operador e definir operações personalizadas com cada um deles.
+ 
+ ```c++
+ class Data {
+ public:   
+    // operadores relacionais
+    bool operator>(const Data& right) const;
+    bool operator>=(const Data& right) const;
+    bool operator<(const Data& right) const;
+    bool operator<=(const Data& right) const;
+    bool operator==(const Data& right) const;
+    bool operator!=(const Data& right) const;
+
+    // função friend (impressão usando cout)
+    friend ostream& operator<<(ostream& os, const Data& obj);
+
+    // função friend (leitura usando cin)
+    friend istream& operator>>(istream& is, Data& obj);
+
+ private:
+    int compare(Data outra) const;
+    int dia, mes, ano;
+ };
+ ```
+ 
  ### Sobrecarga de operadores (métodos friend)
  
+ Usada para manipular o ostream e o istream.
+ 
+ > friend ostream& operator<<(ostream& os, const Complexo& obj);
+ 
+ ```c++
+ class Complexo {
+ public:
+    Complexo(double real, double imaginaria);
+    virtual ~Complexo();
+    Complexo operator+(const Complexo obj) const;
+    Complexo operator-(const Complexo obj) const;
+    Complexo operator*(const Complexo obj) const;
+    Complexo operator/(const Complexo obj) const;
+    friend ostream& operator<<(ostream& os, const Complexo& obj);
+ private:
+    double real;
+    double imaginaria;
+ };
+ ```
  
  ### Herança Múltipla
  > Diamond problem
